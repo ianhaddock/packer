@@ -60,10 +60,10 @@ variable "iso_checksum" {
   default     = ""
 }
 
-variable "iso_url" {
-  type        = string
-  description = "source iso url"
-  default     = ""
+variable "iso_urls" {
+  type        = list(string)
+  description = "source iso urls"
+  default     = []
 }
 
 locals {
@@ -72,7 +72,7 @@ locals {
 
 source "xenserver-iso" "fedora42-local" {
   iso_checksum = "${var.iso_checksum}"
-  iso_url      = "${var.iso_url}"
+  iso_urls     = "${var.iso_urls}"
 
   sr_iso_name    = var.sr_iso_name
   sr_name        = var.sr_name
@@ -114,6 +114,10 @@ source "xenserver-iso" "fedora42-local" {
 
 build {
   sources = ["xenserver-iso.fedora42-local"]
+
+  provisioner "shell" {
+    inline = ["lvextend -L 20G --resizefs /dev/fedora/root"]
+  }
 
   provisioner "shell" {
     inline = ["mount /dev/sr1 /media", "bash /media/Linux/install.sh -n", "umount /media"]
