@@ -1,10 +1,11 @@
 # Packer
 
-Packer + Terraform + xcp-ng testing
+Packer + Terraform xcp-ng testing
 
 ### Notes
 
-pass xcp-ng remote_password as env var to get started
+xcp-ng env vars
+`export PKR_VAR_REMOTE_HOST=192.168.1.1`
 `export PKR_VAR_REMOTE_PASSWORD=123456`
 
  
