@@ -6,6 +6,10 @@ packer {
       version = ">= v0.8.0"
       source  = "github.com/vatesfr/xenserver"
     }
+    ansible = {
+      version = ">= v1.1.3"
+      source  = "github.com/hashicorp/ansible"
+    }
   }
 }
 
@@ -121,6 +125,13 @@ build {
 
   provisioner "shell" {
     inline = ["mount /dev/sr1 /media", "bash /media/Linux/install.sh -n", "umount /media"]
+  }
+
+  provisioner "ansible" {
+    extra_arguments = [
+      "--extra-vars", "sftp_command=/usr/libexec/openssh/sftp-server -e"
+    ]
+    playbook_file = "../ansible/play-fedora42.yaml"
   }
 
   post-processors {
