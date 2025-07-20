@@ -4,3 +4,4 @@
 *.tar.gz
 *.iso
 tutorials/
+packer/packer-server-fedora42/
