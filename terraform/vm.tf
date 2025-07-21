@@ -5,7 +5,7 @@ data "xenorchestra_pool" "pool" {
 }
 
 data "xenorchestra_template" "vm_template" {
-  name_label = "packer-server-fedora42-20250719233748"
+  name_label = var.vm_template_name
 }
 
 data "xenorchestra_sr" "local_storage" {
@@ -16,6 +16,10 @@ data "xenorchestra_network" "network" {
   name_label = "Pool-wide network associated with eth0"
 }
 
+resource "xenorchestra_cloud_config" "cloud_config" {
+  name     = "fedora42_cloud_config"
+  template = file("../cloud-init/add-ssh.yaml")
+}
 
 resource "xenorchestra_vm" "fedora42_vm" {
   cpus              = 2
@@ -24,6 +28,7 @@ resource "xenorchestra_vm" "fedora42_vm" {
   hvm_boot_firmware = "uefi"
   name_label        = "Fedora 42 Server Terraform"
   template          = data.xenorchestra_template.vm_template.id
+  cloud_config      = xenorchestra_cloud_config.cloud_config.template
 
   network {
     network_id = data.xenorchestra_network.network.id

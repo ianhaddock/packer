@@ -87,7 +87,7 @@ source "xenserver-iso" "fedora42-local" {
   remote_username = var.remote_username
 
   clone_template  = "Red Hat Enterprise Linux 9"
-  vm_name         = "${var.vm_name_prefix}-${local.timestamp}"
+  vm_name         = "${var.vm_name_prefix}-gold"
   vm_description  = "Build: ${local.timestamp}"
   firmware        = "uefi"
   vcpus_max       = 2
@@ -125,6 +125,10 @@ build {
 
   provisioner "shell" {
     inline = ["mount /dev/sr1 /media", "bash /media/Linux/install.sh -n", "umount /media"]
+  }
+
+  provisioner "shell" {
+    inline = ["dnf install cloud-init -y", "cloud-init init"]
   }
 
   provisioner "ansible" {
